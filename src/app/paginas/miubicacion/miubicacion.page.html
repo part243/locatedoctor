@@ -1,0 +1,86 @@
+<ion-header class="ion-no-border" translucent>
+  <ion-toolbar class="ion-no-border">
+    <ion-buttons slot="start" >
+      <ion-button (click)="cerrar()">
+        <ion-icon slot="start" name="arrow-back" color="blanco"></ion-icon>
+      </ion-button>
+      <ion-button (click)="ViewLocationMedic()">
+        <ion-icon slot="start" name="home" color="primary"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-title class="ion-text-center" size="small">Ubicación donde prestará sus servicios</ion-title>
+    
+    <ion-buttons slot="end">
+      <ion-button (click)="irAubicacion('1')">
+        <ion-icon slot="start" name="locate-sharp" color="gris" ></ion-icon>
+      </ion-button>
+
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+
+
+
+
+<ion-content >
+
+  <div class="mapDiv" >
+    <div id="map_canvas1" >
+    
+    </div>
+  </div>
+
+
+
+  <div class="div2" id="div2"  #div2>
+    <ion-list class="no-lines" lines="none" no-lines mode="ios">
+      <ion-row>
+        <ion-col size="6">
+          <ion-item >
+            <ion-label color="blanco" position="floating"> Latitud</ion-label>
+            <ion-input type="text"  [(ngModel)]="location.latitude" readonly color="gris"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col size="6">
+          <ion-item>
+            <ion-label color="blanco" position="floating">Logitud</ion-label>
+            <ion-input type="text"  [(ngModel)]="location.longitude" readonly color="gris"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+
+
+
+      <ion-item>
+        <ion-label color="blanco" position="floating">Dirección</ion-label>
+        <ion-input type="text"  [(ngModel)]="location.address" readonly color="gris"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label color="blanco" position="floating">Referencia adicional</ion-label>
+        <ion-textarea maxlength="60" mode="ios" [(ngModel)]="location.referencia" rows="2" color="gris"></ion-textarea>
+      </ion-item>
+    </ion-list>
+
+
+    <ion-row>
+      <ion-col size="12">
+        <ion-button *ngIf="location.address" mode="ios" (click)="aceptar()" expand="full" fill="outline" shape="round">
+        Aceptar
+      </ion-button></ion-col>
+    </ion-row>
+
+  </div>
+
+ 
+
+
+
+
+
+
+</ion-content>
+

@@ -1,0 +1,14 @@
+[
+    {
+        "icon": "home",
+        "name": "Inicio",
+        "redirectTo": "/dashboard"
+    },
+
+    {
+        "icon": "settings-sharp",
+        "name": "Editar datos",
+        "redirectTo": "/perfil"
+    }
+]
+

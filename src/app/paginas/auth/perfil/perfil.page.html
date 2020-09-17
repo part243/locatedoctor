@@ -1,0 +1,152 @@
+<app-encabezado titulo="Actualización de datos"></app-encabezado>
+<ion-content class="ion-padding"  >
+
+
+
+<div class="bottom_avtar" *ngIf="croppedImagepath">
+  <ion-avatar  (click)="selectImage()">
+    <img [src]="croppedImagepath" />
+  </ion-avatar>
+</div>
+
+<div>
+  <ion-button (click)="subirimagen()" expand="block" fill="clear" shape="round">
+    <ion-icon slot="icon-only" name="cloud-upload"></ion-icon>
+    <span>Upload</span>
+  </ion-button>
+</div>
+
+
+<div class="bottom_avtar" *ngIf="croppedImagepath == ''">
+  <ion-avatar (click)="selectImage()" >
+    <img src="https://firebasestorage.googleapis.com/v0/b/locatedoctor-badda.appspot.com/o/imagenes%2Fapp%2Fapp_logoSinText.png?alt=media&token=88fc4841-ac07-49ec-b4a2-fa0b293c879a" />
+  </ion-avatar>
+</div>
+
+
+
+
+
+
+    <ion-list lines="none">
+        <ion-item *ngIf="verifiedMostrar">
+            <ion-label color="blanco" class="ion-text-center">! Su email está verificado ¡</ion-label>
+        </ion-item>
+        <ion-item *ngIf="!verifiedMostrar">
+            <ion-toggle slot="start" 
+                        [(ngModel)]="emailVerified"
+                        >
+            </ion-toggle>
+            <ion-label color="blanco">¿ Verificar email ?</ion-label>
+        </ion-item>
+        <ion-item *ngIf="!verifiedMostrar">
+            <div *ngIf="emailVerified">
+                <ion-text color="blanco">
+                    <h5>Se enviará un email a su correo para la verificación, luego de dar click en guardar cambios.</h5>
+                </ion-text>
+            </div>
+        </ion-item>
+
+  
+    </ion-list>
+
+  <form class="form" [formGroup]="validationsForm"
+                     (ngSubmit)="sendData()">
+        <ion-list class="animated bounceInUp">
+
+            <ion-item>
+                <ion-label position="floating" color="blanco">Nombre <ion-text color="danger">*</ion-text></ion-label>
+                <ion-input required formControlName="nombre" type="text" class="form-control"
+                        ></ion-input>
+            </ion-item>
+            <div class="validation-errors">
+                <ng-container *ngFor="let validation of validationMessages.nombre">
+                  <div 
+                      class="error-message" 
+                      *ngIf="validationsForm.get('nombre').hasError(validation.type) && 
+                      (validationsForm.get('nombre').dirty || validationsForm.get('nombre').touched)">
+                    <ion-text color="danger">
+                      {{ validation.message }}
+                    </ion-text>
+                  </div>
+                </ng-container>
+              </div>
+            <ion-item>
+                <ion-label position="floating" color="blanco">Contraseña antigua <ion-text color="danger">*</ion-text></ion-label>
+                <ion-input required formControlName="oldPass" type="password" class="form-control"
+                           on-focusout="focusFunction()" 
+                ></ion-input>
+            </ion-item>
+            <div class="validation-errors">
+                <ng-container *ngFor="let validation of validationMessages.oldPass">
+                  <div 
+                      class="error-message" 
+                      *ngIf="validationsForm.get('oldPass').hasError(validation.type) && 
+                      (validationsForm.get('oldPass').dirty || validationsForm.get('oldPass').touched)">
+                    <ion-text color="danger">
+                      {{ validation.message }}
+                    </ion-text>
+                  </div>
+                </ng-container>
+              </div>
+            <ion-item>
+                <ion-label position="floating" color="blanco">Nueva <ion-text color="danger">*</ion-text></ion-label>
+                <ion-input required formControlName="newPass" type="password" class="form-control"
+                           on-focusout="focusFunction()" 
+                           (keydown)="onKeydown()"
+                ></ion-input>
+            </ion-item>
+            <div class="validation-errors">
+                <ng-container *ngFor="let validation of validationMessages.newPass">
+                  <div 
+                      class="error-message" 
+                      *ngIf="validationsForm.get('newPass').hasError(validation.type) && 
+                      (validationsForm.get('newPass').dirty || validationsForm.get('newPass').touched)">
+                    <ion-text color="danger">
+                      {{ validation.message }}
+                    </ion-text>
+                  </div>
+                </ng-container>
+              </div>
+            <ion-item>
+                <ion-label position="floating" color="blanco">Confirmar nueva <ion-text color="danger">*</ion-text></ion-label>
+                <ion-input required formControlName="confirmPass" type="password" class="form-control"
+                           on-focusout="focusFunction()"
+                ></ion-input>
+            </ion-item>
+            <div class="validation-errors">
+                <ng-container *ngFor="let validation of validationMessages.confirmPass">
+                  <div 
+                      class="error-message" 
+                      *ngIf="validationsForm.get('confirmPass').hasError(validation.type) && 
+                      (validationsForm.get('confirmPass').dirty || validationsForm.get('confirmPass').touched)">
+                    <ion-text color="danger">
+                      {{ validation.message }}
+                    </ion-text>
+                  </div>
+                </ng-container>
+              </div>
+    </ion-list>
+    <label class="error-message" color="danger">{{errorMessage}}</label>
+    <ion-label class="success-message" color="blanco">{{successMessage}}</ion-label>
+
+    <ion-button 
+            class="submit-btn animated fadeInUp" 
+            expand="full" 
+            color="primary" 
+            type="submit" 
+            [disabled]="validationsForm.invalid"
+            [ngStyle]="{'background-color': validationsForm.invalid ? 'yellow': 'pink'}"
+            >
+          <ion-label color="blanco">Guardar cambios</ion-label>
+    </ion-button>
+
+    <div *ngIf="verifiedMostrar">
+        <ion-button (click)="gotoregisterConsultorio()" class="animated fadeInUp" expand="block"  color="gris">
+          <ion-icon slot="start" name="business"></ion-icon> 
+          <ion-label>Agregar consultorio o profesión</ion-label>
+        </ion-button>
+    </div>
+  </form>
+
+</ion-content>

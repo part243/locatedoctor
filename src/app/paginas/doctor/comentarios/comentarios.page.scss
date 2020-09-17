@@ -1,0 +1,49 @@
+/* General CSS Setup */
+
+.container {
+    padding: 5% 5%;
+  }
+  /* CSS talk bubble */
+  .talk-bubble {
+    margin-top: 5px;
+    margin-left: 40px;
+    margin-right: 40px;
+    margin-bottom: 5px;
+
+    display: inline-block;
+    position: relative;
+      width: 80%;
+      height: auto;
+      background-color: rgba(255, 255, 224, 0.795);
+  }
+
+  
+  
+  .tri-right.left-in:after{
+    content: ' ';
+	position: absolute;
+	width: 0;
+	height: 0;
+  left: -20px;
+	right: auto;
+  top: 38px;
+	bottom: auto;
+	border: 12px solid;
+	border-color: rgba(255, 255, 224, 0.795) rgba(255, 255, 224, 0.795) transparent transparent;
+  }
+  
+  /* talk bubble contents */
+  .talktext{
+    padding: 1em;
+    text-align: left;
+    line-height: 1.5em;
+  }
+
+.item_msg{
+    --background:  rgba(255, 255, 224, 0.795) rgba(255, 255, 224, 0.795) transparent transparent;
+}
+  .talktext p{
+    /* remove webkit p margins */
+   // -webkit-margin-before: 0em;
+   // -webkit-margin-after: 0em;
+  }

@@ -1,0 +1,7 @@
+{
+  "name": "locatedoctor",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}

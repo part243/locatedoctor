@@ -1,0 +1,473 @@
+<ion-header class="ion-no-border" translucent>
+  <ion-toolbar class="ion-no-border">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/perfil"></ion-back-button>      
+    </ion-buttons>
+
+    <ion-title class="ion-text-center" size="small">Registre sus datos profesionales</ion-title>
+    
+    <ion-buttons slot="end">
+      <ion-button (click)="GetUbicacion()">
+        <ion-icon slot="start" name="location-sharp" color="gris" ></ion-icon>
+      </ion-button>
+      <!-- <ion-button (click)="RegisDoc()">
+        <ion-icon slot="start" name="search"></ion-icon>
+      </ion-button> -->
+
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding" >
+  <ion-segment value="doctor" (ionChange)="segmentChanged($event)" color="danger">
+    
+    <ion-segment-button value="doctor" layout="icon-end">
+      <ion-icon name="pulse"></ion-icon>
+      <ion-label>Doctor</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="enfermero" layout="icon-end">
+      <ion-icon name="medkit"></ion-icon>
+      <ion-label>Enfermero</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <!-- ------------------------- si es doctor -->
+  <div *ngIf="isDoctor">
+     <form class="form" [formGroup]="frmDoctor" (ngSubmit)="RegisDoc(frmDoctor.value)" > <!-- -->
+
+      <ion-list class="animated bounceInUp"> <!-- SIGLAS DEL TÍTULO -->
+            <ion-radio-group name="profesion" value="Dro." formControlName="profesion" mode="ios">
+              <ion-list-header>
+                <ion-label color="blanco" class="ion-text-center profesion">Sigla a mostrar</ion-label>
+              </ion-list-header>
+              <ion-grid fixed>
+                <ion-row>
+                  <ion-col size="6">
+                    <ion-item>
+                      <ion-label color="primary">Dr.</ion-label>
+                      <ion-radio value="Dr." color="sucsess"></ion-radio>
+                    </ion-item>
+                  </ion-col>
+                  <ion-col size="6">
+                    <ion-item>
+                      <ion-label color="primary">Dra.</ion-label>
+                      <ion-radio value="Dra." color="sucsess"></ion-radio>
+                    </ion-item>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+
+
+            </ion-radio-group>
+        
+        <ion-item> <!-- CEDULA DEL PROFESIONAL -->
+          <ion-label  position="floating" color="light">Cédula / Pasaporte</ion-label>
+          <ion-input 
+                    type="text" 
+                    formControlName="cedula"
+                    class="form-control">
+          </ion-input>
+            <div class="validation-errors">
+              <ng-container *ngFor="let validation of validationMessages.cedula">
+                <div 
+                    class="error-message" *ngIf="frmDoctor.get('cedula').hasError(validation.type) && (frmDoctor.get('cedula').dirty || frmDoctor.get('cedula').touched)">
+                  <ion-text color="danger" class="texto-error">
+                    {{ validation.message }}
+                  </ion-text>
+                </div>
+              </ng-container>
+            </div>
+        </ion-item>
+
+        <ion-item> <!-- NOMBRE DEL PROFESIONAL -->
+          <ion-label  position="floating" color="light">Nombre a mostrar</ion-label>
+          <ion-input 
+                    type="text" 
+                    formControlName="nombre"
+                    class="form-control">
+          </ion-input>
+            <div class="validation-errors">
+              <ng-container *ngFor="let validation of validationMessages.nombre">
+                <div 
+                    class="error-message" *ngIf="frmDoctor.get('nombre').hasError(validation.type) && (frmDoctor.get('nombre').dirty || frmDoctor.get('nombre').touched)">
+                  <ion-text color="danger" class="texto-error">
+                    {{ validation.message }}
+                  </ion-text>
+                </div>
+              </ng-container>
+            </div>
+        </ion-item>
+
+        <ion-item > <!-- AGREGAR TELÉFONOS DE CONTACTO -->
+          <ion-grid>
+            <ion-row class="ion-text-center"> 
+              <ion-col size="12" class="ion-text-center">
+              <ion-button (click)="AddTelefonos()" mode="ios" color="gris">
+                <ion-label>Agregue sus teléfonos de contacto</ion-label>
+                <ion-icon slot="end" name="add"></ion-icon>
+              </ion-button>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-chip  mode="ios" *ngFor="let item of telefonos, index as i">
+                  <ion-label color="primary">{{item.name}}</ion-label>
+                  <ion-icon  name="close-circle"  (click)="deleteService(i,'tlf')"></ion-icon>
+                </ion-chip>
+            </ion-row>
+          </ion-grid>
+  
+  
+        </ion-item>
+
+        <ion-item> <!-- LISTA DE PAISES -->
+          <ion-label  position="floating" color="light">País de origen</ion-label>
+            <ion-select interface="sheet" 
+                        ok-text="Ok" 
+                        mode="ios"
+                        cancel-text="Cancelar" 
+                        [(value)]="tmp.paisorigen" 
+                        multiple="false" 
+                        placeholder="Seleccione..." 
+                        formControlName="paisorigen"
+              >
+              
+                <ion-select-option  *ngFor="let i of sortedArr, index as x" 
+                                    [value]="i.id"  
+                                    >{{i.name}}</ion-select-option>
+              
+              </ion-select>
+            <div class="validation-errors">
+              <ng-container *ngFor="let validation of validationMessages.paisorigen">
+                <div 
+                    class="error-message" *ngIf="frmDoctor.get('paisorigen').hasError(validation.type) && (frmDoctor.get('paisorigen').dirty || frmDoctor.get('paisorigen').touched)">
+                  <ion-text color="danger" class="texto-error">
+                    {{ validation.message }}
+                  </ion-text>
+                </div>
+              </ng-container>
+            </div>
+        </ion-item>
+
+        <ion-item> <!-- ESPECIALIDAD A MOSTRAR -->
+          <ion-label  position="floating" color="light">Especialidad a principal</ion-label>
+          <ion-select interface="sheet" 
+                      ok-text="Ok" 
+                      mode="ios"
+                      cancel-text="Cancelar" 
+                      [(value)]="tmp.especialidadp" 
+                      multiple="false" 
+                      placeholder="Seleccione..." 
+                      formControlName="especialidad"
+            >
+            
+              <ion-select-option  [value]="i.id"  
+                                  *ngFor="let i of sortedEspecialidades, index as x">{{i.name}}</ion-select-option>
+            
+            </ion-select>
+            <div class="validation-errors">
+              <ng-container *ngFor="let validation of validationMessages.especialidad">
+                <div 
+                    class="error-message" *ngIf="frmDoctor.get('especialidad').hasError(validation.type) && (frmDoctor.get('especialidad').dirty || frmDoctor.get('especialidad').touched)">
+                  <ion-text color="danger" class="texto-error">
+                    {{ validation.message }}
+                  </ion-text>
+                </div>
+              </ng-container>
+            </div>
+        </ion-item>
+
+        <ion-item> <!-- OTRAS ESPECIALIDADES -->
+          <ion-label  position="floating" color="light">Otras especialidades</ion-label>
+          <ion-select interface="sheet" 
+                      ok-text="Ok" 
+                      mode="ios"
+                      cancel-text="Cancelar" 
+                      value="" 
+                      multiple="true" 
+                      placeholder="Seleccione..." 
+                      formControlName="otrasEspecialidades"
+                      [(value)]="tmp.otrasespecialidades" 
+            >
+            
+              <ion-select-option  [value]="i.id" 
+              
+                                  *ngFor="let i of sortedEspecialidades, index as x">{{i.name}}</ion-select-option>
+            
+            </ion-select>
+            <div class="validation-errors">
+              <ng-container *ngFor="let validation of validationMessages.otrasEspecialidades">
+                <div 
+                    class="error-message" *ngIf="frmDoctor.get('otrasEspecialidades').hasError(validation.type) && (frmDoctor.get('otrasEspecialidades').dirty || frmDoctor.get('otrasEspecialidades').touched)">
+                  <ion-text color="danger" class="texto-error">
+                    {{ validation.message }}
+                  </ion-text>
+                </div>
+              </ng-container>
+            </div>
+        </ion-item>
+
+        <ion-item > <!-- OTRAS ACTIVIDADES ADICIONALES -->
+          <ion-grid >
+            <ion-row>
+              <ion-col size="12" class="ion-text-center">
+              <ion-button (click)="AddServices()" mode="ios" color="gris">
+                <ion-label>
+                  Agregar servicios adicionales</ion-label>
+                <ion-icon slot="end" name="add"></ion-icon>
+              </ion-button>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-chip  mode="ios" *ngFor="let item of otrosServiciosMostrar, index as i">
+                  <ion-label color="primary">{{item.name}}</ion-label>
+                  <ion-icon  name="close-circle"  (click)="deleteService(i,'actv')"></ion-icon>
+                </ion-chip>
+            </ion-row>
+          </ion-grid>
+
+
+        </ion-item>
+
+        <ion-list> <!-- DÍAS DE SEMANA Y HORARIO -->
+          <ion-title class="ion-text-center profesion" size="" color="blanco">Horarios de atención</ion-title>
+            
+            <ion-button (click)="moreHora = !moreHora" class="ion-text-center" expand="full" fill="clear" shape="round">
+                <ion-icon slot="icon-only" name="add" *ngIf="!moreHora"></ion-icon>
+                <ion-icon slot="icon-only" color="danger" name="remove" *ngIf="moreHora"></ion-icon>
+            </ion-button>
+          
+            <ion-grid fixed width="100%">
+            <ion-row>
+              <ion-col size="6">
+                <ion-item>
+                  <ion-label>De</ion-label>
+                  <ion-input type="time" placeholder="De" 
+                              [(ngModel)]="horario.hora1"   
+                              [ngModelOptions]="{standalone: true}"  
+                        ></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col size="6">
+                <ion-item>
+                  <ion-label>A</ion-label>
+                  <ion-input type="time" placeholder="A" 
+                              [(ngModel)]="horario.hora2"   
+                              [ngModelOptions]="{standalone: true}"  
+                        ></ion-input>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            <ion-row *ngIf="moreHora" class="animated bounceInUp">
+              <ion-col size="6">
+                <ion-item>
+                  <ion-label>Y</ion-label>
+                  <ion-input type="time" placeholder="Y" 
+                              [(ngModel)]="horario.hora3"   
+                              [ngModelOptions]="{standalone: true}"  
+                        ></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col size="6">
+                <ion-item>
+                  <ion-label>A</ion-label>
+                  <ion-input type="time" placeholder="De" 
+                              [(ngModel)]="horario.hora4"   
+                              [ngModelOptions]="{standalone: true}"  
+                        ></ion-input>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col size="6" *ngFor="let item of semana, index as x">
+              <ion-item>
+                  <ion-label>{{item.val}}</ion-label>
+                  <ion-checkbox slot="end"  
+                                name="semana"
+                                mode="ios" 
+                                color="primary"
+                                [(ngModel)]="item.isChecked" 
+                                [ngModelOptions]="{standalone: true}"
+                                (ionChange)="imprimeDias($event)"
+                    ></ion-checkbox>
+                  </ion-item>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-list>
+
+        <!-------------- AÑOS EN LA PROFESION -------------->
+        <ion-title class="ion-text-center profesion" size="" color="blanco">Tiempo que tiene ejerciendo la profesión</ion-title>
+        <ion-item> <!-- años en la profesión-->
+         <ion-label>
+           <p></p>
+           <h2>Años</h2>
+         </ion-label> <br>
+          <ion-range
+            min="0" max="40"
+            dualKnobs="false" pin="true"
+            snaps="true" step="1"
+            ticks="true" value="0"
+            color="primary"
+            [(value)]="tmp.anioslabor"
+            formControlName="anio"
+            class="form-control">
+            (ionChange)="savePaises($event)">
+          </ion-range>
+          <div class="validation-errors">
+            <ng-container *ngFor="let validation of validationMessages.anio">
+              <div 
+                  class="error-message" *ngIf="frmDoctor.get('anio').hasError(validation.type) && (frmDoctor.get('anio').dirty || frmDoctor.get('anio').touched)">
+                <ion-text color="danger" class="texto-error">
+                  {{ validation.message }}
+                </ion-text>
+              </div>
+            </ng-container>
+          </div>
+        </ion-item>
+
+        <!------------------ TITULOS Y CERTIFICADOS ---------->
+        <ion-title class="ion-text-center profesion" size="" color="blanco">Títulos y Certificados</ion-title>
+        <ion-item > 
+          <ion-grid fixed>
+            <ion-row> <!-- titulos -->
+              <ion-col size="12" class="ion-text-center">
+              <ion-button (click)="AddAcademico('titulo',undefined)" mode="ios" color="gris">
+                <ion-label>
+                  Títulos</ion-label>
+                <ion-icon slot="end" name="add"></ion-icon>
+              </ion-button>
+              </ion-col>
+            </ion-row>
+            <ion-row> <!-- chip para agregar los titulos-->
+                <ion-chip  mode="ios" *ngFor="let item of auxtitulos, index as i" >
+                  <ion-label color="primary" (click)="AddAcademico('titulo',i)">{{item.name}}</ion-label>
+                  <ion-icon  name="close-circle"  (click)="deleteService(i,'titulo')"></ion-icon>
+                </ion-chip>
+            </ion-row>
+            <ion-row> <!-- certificados -->
+              <ion-col size="12" class="ion-text-center">
+              <ion-button (click)="AddAcademico('certificado',undefined)" mode="ios" color="gris">
+                <ion-label>
+                  Certificados</ion-label>
+                <ion-icon slot="end" name="add"></ion-icon>
+              </ion-button>
+              </ion-col>
+            </ion-row>
+            <ion-row> <!-- cjip para agregar certificados-->
+                <ion-chip  mode="ios" *ngFor="let item of auxcertificados, index as i">
+                  <ion-label color="primary" (click)="AddAcademico('certificado',i)">{{item.name}}</ion-label>
+                  <ion-icon  name="close-circle"  (click)="deleteService(i,'certificado')"></ion-icon>
+                </ion-chip>
+            </ion-row>
+          </ion-grid>
+
+
+        </ion-item>
+
+        <ion-item> <!-- VALOR DE CONSULTA -->
+          <ion-label  position="floating" color="light">Valor de consulta</ion-label>
+          <ion-input 
+                    type="number" 
+                    formControlName="vconsulta"
+                    class="form-control" >
+          </ion-input>
+            <div class="validation-errors">
+              <ng-container *ngFor="let validation of validationMessages.vconsulta">
+                <div 
+                    class="error-message" *ngIf="frmDoctor.get('vconsulta').hasError(validation.type) && (frmDoctor.get('vconsulta').dirty || frmDoctor.get('vconsulta').touched)">
+                  <ion-text color="danger" class="texto-error">
+                    {{ validation.message }}
+                  </ion-text>
+                </div>
+              </ng-container>
+            </div>
+        </ion-item>
+
+        
+          <ion-item> <!-- VALOR CONSULTA EMERGENCIA-->
+            <ion-label><ion-text color="blanco">
+              <h4>¿Atiende emergencias?</h4>
+            </ion-text></ion-label>
+            <ion-checkbox 
+                    slot="end"
+                    mode="ios" 
+                    [checked]="emergencia.isChecked?true:false"
+                    [value]="emergencia.isChecked?true:false"
+                    (ionChange)="emergenciaCambia()"
+                    
+                    >
+            </ion-checkbox>
+
+          </ion-item>
+          <ion-item *ngIf="emergencia.isChecked">
+              <ion-label  position="floating" color="light">Valor de consulta emergencia</ion-label>
+              <ion-input 
+                        type="number"
+                        [value]="emergencia.valor"
+                        (keyup)="valoremergencia($event)"
+                        >
+            </ion-input>
+    
+
+          </ion-item>
+
+        <ion-item class="no-lines" lines="none" no-lines mode="ios"> <!-------- UBICACION DEL LOCAL A REGISTRAR -->
+          <ion-label >
+            <ion-text color="blanco">
+              <p >Registre su ubicación</p>
+            </ion-text>
+            <ion-text color="gris">
+              <h2 >{{location.address}}</h2>
+              <h2>{{location.referencia}}</h2>
+            </ion-text>
+          </ion-label>
+          <ion-button (click)="GetUbicacion()" fill="clear">
+            <ion-icon slot="icon-only" name="location-sharp" color="gris"></ion-icon>
+            
+          </ion-button>
+        </ion-item>
+
+
+      </ion-list>
+
+
+
+      
+      <label class="error-message">{{errorMessage}}</label>
+      <ion-label class="success-message">{{successMessage}}</ion-label>
+      
+      <ion-button  
+      color="primary"
+      type="submit"  
+      [disabled]="!frmDoctor.valid"
+      expand="full"
+      class=" animated bounceInLeft" 
+      shape="round"
+      mode="ios">
+        Guardar
+      </ion-button>
+      <!-- <ion-button class="submit-btn animated bounceInLeft" 
+          color="primary"
+          type="button"  
+          [disabled]="!frmDoctor.valid"
+          expand="full"
+          shape="round"
+          mode="ios"
+          
+      >
+        Guardar</ion-button> -->
+
+      </form>
+    </div>
+
+    <!-- <ion-button (click)="savePaises('d')" expand="block" fill="clear" shape="round" mode="ios">
+      guardar paises
+    </ion-button> -->
+    <div *ngIf="!isDoctor">
+      <ion-text color="primary" class="ion-text-center">
+        <h1>Registre sus datos de ubicación.</h1>
+      </ion-text>
+
+    </div>
+</ion-content>
+

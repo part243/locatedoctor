@@ -1,0 +1,19 @@
+ion-content {
+    font-family: 'Lobster', cursive;
+
+    h1 {
+      font-size: 4rem;
+    }
+    h1 {
+      color: #fff;
+      text-shadow: 1px 0 0 gray, -1px 0 0 gray, 0 1px 0 gray, 0 -1px 0 gray, 1px 1px gray, -1px -1px 0 gray, 1px -1px 0 gray, -1px 1px 0 gray;
+       
+    }
+    .center {
+       
+        // transform: translateY(-50%);
+        // position: absolute !important;
+        text-align: center;
+        width:100%;
+    }
+}

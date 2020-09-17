@@ -1,0 +1,205 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "~@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "~@ionic/angular/css/normalize.css";
+@import "~@ionic/angular/css/structure.css";
+@import "~@ionic/angular/css/typography.css";
+@import '~@ionic/angular/css/display.css';
+
+/* Optional CSS utils that can be commented out */
+@import "~@ionic/angular/css/padding.css";
+@import "~@ionic/angular/css/float-elements.css";
+@import "~@ionic/angular/css/text-alignment.css";
+@import "~@ionic/angular/css/text-transformation.css";
+@import "~@ionic/angular/css/flex-utils.css";
+
+
+//para video de fondo
+@import '~animate.css/animate.min.css';
+
+// css para input telf
+
+
+ion-content {
+    --ion-background-color: var(--ion-color-fondoapp);
+  }
+
+ion-toolbar {
+    --background: var(--ion-color-fondoapp);
+    color: white;
+  }
+
+  ion-alert {
+    --background: var(--ion-color-fondoapp) !important;
+    --backdrop-opacity: 0.5;
+   }
+ 
+
+
+
+   a.sourcecode {
+    position: absolute;
+    right: 1em;
+    z-index: 2;
+  }
+
+  .flip-container h2 {
+    font-size: 11px;
+    margin: auto;
+    text-align: center;
+    margin-left: 2px;
+    margin-right: 8px;
+  }
+  
+  .flip-container h3 {
+    font-size: 12px;
+    margin: auto;
+    text-align: center;
+    margin-left: 2px;
+    margin-right: 8px;
+  }
+
+
+
+  .flip-container h4 {
+    font-size: 12px;
+    margin: auto;
+    text-align: center;
+    margin-left: 5px;
+    margin-right: 5px;
+    font-weight: normal;
+    color: #4d4242;
+  }
+
+  .flip-container h5 {
+    font-size: 15px;
+    margin: auto;
+    text-align: center;
+    margin-left: 5px;
+    margin-right: 5px;
+    font-weight: normal;
+  }
+
+  .flip-container .ncalificacion {
+    font-size: 9px;
+    margin: auto;
+    text-align: center;
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+  .flip-container img {
+    display: block;
+    width: 60px;
+    height: 70px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .flip-container .star {
+    display: block;
+    width: 100px;
+    height: 15px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  /* entire container, keeps perspective */
+  .flip-container {
+    -webkit-perspective: 1000;
+    -moz-perspective: 1000;
+    -o-perspective: 1000;
+    perspective: 1000;
+  }
+  /* flip the pane when hovered */
+  .flip-container.hover .flipper {
+    -webkit-transform: rotateY(180deg);
+    -moz-transform: rotateY(180deg);
+    -o-transform: rotateY(180deg);
+    -ms-transform: rotateY(180deg);
+    transform: rotateY(180deg);
+  }
+  
+  .flip-container,  .front, .back {
+    width: 150px; //150
+    height: 207px; //218
+  }
+  /* flip speed goes here */
+  .flipper {
+    transform-style: preserve-3d;
+    -moz-transform: perspective(1000px);
+    -moz-transform-style: preserve-3d;
+    -webkit-transition: 0.6s;
+    -moz-transition: 0.6s;
+    -o-transition: 0.6s;
+    -ms-transition: 0.6s;
+    transition: 0.6s;
+  
+    position: relative;
+  }
+  
+  /* hide back of pane during swap */
+  .front, .back {
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    -o-backface-visibility: hidden;
+    backface-visibility: hidden;
+    background-color: white;
+  
+    -webkit-transform-style: preserve-3d;
+    -moz-transform-style: preserve-3d;
+    -o-transform-style: preserve-3d;
+    -ms-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+  
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  
+  /* front pane, placed above back */
+  .front {
+    z-index: 2;
+    -webkit-transform: rotateY(0deg);
+    -moz-transform: rotateY(0deg);
+    -o-transform: rotateY(0deg);
+    -ms-transform: rotateY(0deg);
+    transform: rotateY(0deg);
+  }
+  
+  /* back, initially hidden pane */
+  .back {
+    -webkit-transform: rotateY(-180deg);
+    -moz-transform: rotateY(-180deg);
+    -o-transform: rotateY(-180deg);
+    -ms-transform: rotateY(-180deg);
+    transform: rotateY(-180deg);
+  }
+  
+
+  .my-custom-modal-class .modal-wrapper{
+    position: absolute;
+    overflow: hidden;
+    max-width: 320px;
+    border-radius: 10px;
+    width: 90vw;
+    height: 50vh !important;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    border: 0;
+    box-shadow: 0 16px 20px rgba(0,0,0,.4);
+    background-color: #fafafa;
+  }

@@ -1,0 +1,45 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="ion-no-border">
+    <ion-title class="ion-text-center">{{name}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+  <ion-content class="ion-padding">
+    <rating #rating [(ngModel)]="rate"
+          activeIcon = "ios-star"
+          defaultIcon = "ios-star-outline"
+          activeColor = "#488aff" 
+          defaultColor = "#f4f4f4"
+          readonly="false"
+          rating="3"
+          size="50px"
+          fontSize = "50px"
+          maxRating = 5
+          rating=3
+          (ngModelChange)="logRatingChange($event)">
+    </rating>
+
+    <ion-text color="blanco" class="ion-text-center">
+      <h1>{{rate}}/5</h1>
+    </ion-text>
+
+
+    <ion-item>
+      <ion-textarea placeholder="Comentario..." rows="2" color="blanco" [(ngModel)]="comentario"></ion-textarea>
+    </ion-item>
+
+
+<ion-row>
+  <ion-col size="6">
+    <ion-button (click)="onEnviar()" expand="block" fill="solid" shape="round"  >
+      Enviar
+    </ion-button>
+  </ion-col>
+  <ion-col size="6">
+    <ion-button (click)="dismiss()" expand="block" fill="solid" shape="round" color="gris">
+      Cancelar
+    </ion-button>
+  </ion-col>
+</ion-row>
+
+</ion-content>

@@ -1,0 +1,367 @@
+<ion-header class="ion-no-border" translucent>
+  <ion-toolbar class="ion-no-border">
+    <ion-buttons slot="start">
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="icon-only" name="arrow-back" color="blanco"></ion-icon>
+      </ion-button>  
+    </ion-buttons>
+
+      <ion-text color="blanco" class="ion-text-center">
+        <h5 color="blanco">Información de médico</h5>
+      </ion-text>
+      <ion-buttons slot="end">
+        <ion-button (click)="ViewComments()">
+          <ion-icon slot="start" name="chatbubbles" color="blanco" ></ion-icon>
+        </ion-button>
+      </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen>
+  <div *ngIf="datosCargados">
+    <ion-card  
+          *ngFor="let dm of DatosMedico, index as x"
+          color="blanco"
+      >
+      <ion-card-header >
+        <ion-card-title>{{dm.sigla + ' ' + dm.nombre}}</ion-card-title>
+        <ion-card-subtitle class="ion-text-center"><h2>{{dm.especialidadp}}</h2></ion-card-subtitle>
+        <img [src]="dm.foto" />
+      </ion-card-header>
+      <ion-card-content >
+        <!-- Otras especialidades -->
+        <ion-item color="blanco" *ngIf="dm.otrasespecialidades != ''">
+          <ion-label>
+            
+            <ion-text color="gris">
+            <h3><span><ion-icon slot="star" name="library" color="primary"></ion-icon></span><b> Otras especialidades</b></h3>
+            </ion-text>
+            <ion-text color="gris" class="ion-text-wrap">
+              <p class="ion-text-wrap">{{dm.otrasespecialidades}}</p>
+            </ion-text>
+          </ion-label>
+        </ion-item>
+        <!-- Servicio adicional-->
+        <ion-item color="blanco" *ngIf="dm.servicioadicional != ''"  class="ion-text-wrap">
+          <ion-label>
+            <ion-text color="gris">
+              <h3><span><ion-icon slot="star" name="medal" color="primary"></ion-icon></span><b> Servicios adicionales</b></h3>
+            </ion-text>
+            <ion-text color="gris" >
+              <p class="ion-text-wrap">
+                <span *ngIf="dm.servicioadicional.length == 1">
+                  {{dm.servicioadicional[0].name}}
+                </span>
+                <span *ngFor="let item of dm.servicioadicional, index as i">
+                  <span *ngIf="i == dm.servicioadicional.length -1">
+                    {{item.name}}
+                  </span>
+                  <span *ngIf="i <= dm.servicioadicional.length -2">
+                    {{item.name}},
+                  </span>
+                </span>
+              </p>
+            </ion-text>
+          </ion-label>
+        </ion-item>
+        <!-- Valor de consulta-->
+        <ion-item color="blanco" *ngIf="dm.vconsulta != ''">
+          <ion-label>
+            <ion-text color="gris">
+              <h3><span><ion-icon slot="star" name="cash" color="primary"></ion-icon></span><b> Precio</b></h3>
+            </ion-text>
+            <ion-text color="gris">
+              <p>
+                <ion-row>
+                  <ion-col size="8">Consulta normal:</ion-col>
+                  <ion-col size="4">${{dm.vconsulta | number : '1.2-2'}}</ion-col>
+                </ion-row>
+                <ion-row *ngIf="dm.emergencia.isChecked">
+                  <ion-col size="8">Emergencia:</ion-col>
+                  <ion-col size="4">${{dm.emergencia.valor | number : '1.2-2'}}</ion-col>
+                </ion-row>
+              </p>
+            </ion-text>
+          </ion-label>
+        </ion-item>
+        <!-- Horarios y días de atención-->
+        <ion-item color="blanco">
+          <ion-label>
+            <ion-text color="gris">
+              <h3><span><ion-icon slot="star" name="time" color="primary"></ion-icon></span><b> Horario de atención</b></h3>
+            </ion-text>
+            <ion-text color="gris">
+              <p>
+                <ion-row class="ion-text-center">
+                  <ion-col size="2" class="ion-text-left">De:</ion-col>
+                  <ion-col size="4">{{dm.horarioatencion.h1}}</ion-col>
+                  <ion-col size="2">a</ion-col>
+                  <ion-col size="4">{{dm.horarioatencion.h2}}</ion-col>
+                </ion-row>
+                <ion-row *ngIf="dm.horarioatencion.h3 != ''" class="ion-text-center">
+                  <ion-col size="2" class="ion-text-left">Y:</ion-col>
+                  <ion-col size="4">{{dm.horarioatencion.h3}}</ion-col>
+                  <ion-col size="2">a</ion-col>
+                  <ion-col size="4">{{dm.horarioatencion.h4}}</ion-col>
+                </ion-row>
+              </p>
+              <p class="ion-text-wrap">
+                {{diasatencion}}
+              </p>
+            </ion-text>
+          </ion-label>
+        </ion-item>
+        <!-- Teléfono de contacto-->
+        <ion-item color="blanco">
+          <ion-label>
+            <ion-text color="gris">
+              <h3><span><ion-icon slot="star" name="call" color="primary"></ion-icon></span><b> Contactos</b></h3>
+            </ion-text>
+            <ion-text color="gris">
+              <p>
+                <ion-row>
+                  <ion-col size="6" *ngFor="let tel of dm.telefonos">
+                    <a href="tel:{{tel.name}}">{{tel.name}}</a>
+                  </ion-col>
+                </ion-row>
+            </p>
+            </ion-text>
+          </ion-label>
+        </ion-item>
+        <!-- Dirección -->
+        <ion-item color="blanco">
+          <ion-label>
+            <ion-text color="gris">
+              <h3><span><ion-icon slot="star" name="compass" color="primary"></ion-icon></span><b> Dirección</b></h3>
+            </ion-text>
+            <ion-text color="gris" class="ion-text-wrap">
+              <p>{{dm.ubicacion.address}}</p>
+              <p *ngIf="dm.ubicacion.referencia != ''"><span class="subtitulo">Referencia: </span>{{dm.ubicacion.referencia}}</p>
+            </ion-text>
+          </ion-label>
+        </ion-item>
+        <!-- Años de experiencia laboral -->
+        <ion-item color="blanco">
+          <ion-label>
+            <ion-text color="gris">
+              <h3><span><ion-icon slot="star" name="briefcase" color="primary"></ion-icon></span><b> Años de experiencia</b></h3>
+            </ion-text>
+            <ion-text color="gris">
+              <p>
+                  {{dm.anioslabor}}
+              </p>
+            </ion-text>
+          </ion-label>
+        </ion-item>
+        <!-- Pais de origen -->
+        <ion-item color="blanco">
+          <ion-label>
+            <ion-text color="gris">
+              <h3><span><ion-icon slot="star" name="flag" color="primary"></ion-icon></span><b> País de origen</b></h3>
+            </ion-text>
+            <ion-text color="gris">
+              <p>
+                  {{dm.paisorigen}}
+              </p>
+            </ion-text>
+          </ion-label>
+        </ion-item>
+        <!-- Titulos acádemicos -->
+        <ion-item color="blanco">
+          <ion-label>
+            <ion-text color="gris">
+              <h3><span><ion-icon slot="star" name="school" color="primary"></ion-icon></span><b> Títulos académicos</b></h3>
+            </ion-text>
+            <ion-text color="gris">
+              <p class="ion-text-wrap p" *ngFor="let item of dm.titulos" >
+                <span class="ion-text-wrap">{{item.name}}</span><br>
+                <span class="subtitulo">Institución: </span><span>{{item.institucion}}</span> <br>
+                <span class="subtitulo">fecha: </span><span>{{item.fecha}}</span>
+              </p>
+            </ion-text>
+          </ion-label>
+        </ion-item>
+        <!-- Certificados -->
+        <ion-item color="blanco">
+          <ion-label>
+            <ion-text color="gris">
+              <h3><span><ion-icon slot="star" name="newspaper" color="primary"></ion-icon></span><b> Certificados</b></h3>
+            </ion-text>
+            <ion-text color="gris">
+              <p class="ion-text-wrap p" *ngFor="let item of dm.certificados" >
+                <span class="ion-text-wrap">{{item.name}}</span><br>
+                <span class="subtitulo">Institución: </span><span>{{item.institucion}}</span> <br>
+                <span class="subtitulo">fecha: </span><span>{{item.fecha}}</span>
+              </p>
+            </ion-text>
+          </ion-label>
+        </ion-item>
+      </ion-card-content>
+
+    </ion-card>
+</div>
+
+
+
+  <!-- ESKELETON -->
+<ion-card color="blanco" *ngIf="!datosCargados" class="ion-padding custom-skeleton">
+  <ion-card-header >
+    <ion-card-title> <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></ion-card-title>
+    <ion-card-subtitle class="ion-text-center"><h2> <ion-skeleton-text animated style="width: 40%"></ion-skeleton-text></h2></ion-card-subtitle>
+    <ion-thumbnail>
+      <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
+    </ion-thumbnail>
+  </ion-card-header>
+<ion-card-content >
+<!-- Otras especialidades -->
+<ion-item color="blanco">
+  <ion-label>
+    <ion-text color="gris">
+     <h3><span><ion-icon slot="star" name="library" color="primary"></ion-icon></span><b>  <ion-skeleton-text animated style="width: 40%"></ion-skeleton-text></b></h3>
+    </ion-text>
+    <ion-text color="gris" class="ion-text-wrap">
+      <p class="ion-text-wrap"> <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text></p>
+    </ion-text>
+  </ion-label>
+</ion-item>
+<!-- Servicio adicional-->
+<ion-item color="blanco" class="ion-text-wrap">
+  <ion-label>
+    <ion-text color="gris">
+      <h3><span><ion-icon slot="star" name="medal" color="primary"></ion-icon></span><b> <ion-skeleton-text animated style="width: 40%"></ion-skeleton-text></b></h3>
+    </ion-text>
+    <ion-text color="gris" >
+      <p class="ion-text-wrap">
+        <span >
+          <ion-skeleton-text animated style="width: 90%"></ion-skeleton-text>
+        </span>
+        <span>
+          <span>
+            <ion-skeleton-text animated style="width: 30%"></ion-skeleton-text>
+          </span>
+          <span>
+            <ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
+          </span>
+        </span>
+      </p>
+    </ion-text>
+  </ion-label>
+</ion-item>
+<!-- Valor de consulta-->
+<ion-item color="blanco" >
+  <ion-label>
+    <ion-text color="gris">
+      <h3><span><ion-icon slot="star" name="cash" color="primary"></ion-icon></span><b>  <ion-skeleton-text animated style="width: 30%"></ion-skeleton-text></b></h3>
+    </ion-text>
+    <ion-text color="gris">
+      <p>
+        <ion-row>
+          <ion-col size="8"> <ion-skeleton-text animated style="width: 40%"></ion-skeleton-text></ion-col>
+          <ion-col size="4"> <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text></ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="8"> <ion-skeleton-text animated style="width: 25%"></ion-skeleton-text></ion-col>
+          <ion-col size="4"> <ion-skeleton-text animated style="width: 96%"></ion-skeleton-text></ion-col>
+        </ion-row>
+      </p>
+    </ion-text>
+  </ion-label>
+</ion-item>
+<!-- Horarios y días de atención-->
+<ion-item color="blanco">
+  <ion-label>
+    <ion-text color="gris">
+      <h3><span><ion-icon slot="star" name="time" color="primary"></ion-icon></span><b> <ion-skeleton-text animated style="width: 40%"></ion-skeleton-text></b></h3>
+    </ion-text>
+    <ion-text color="gris">
+      <p>
+        <ion-row class="ion-text-center">
+          <ion-col size="2" class="ion-text-left"><ion-skeleton-text animated style="width: 10%"></ion-skeleton-text></ion-col>
+          <ion-col size="4"><ion-skeleton-text animated style="width: 20%"></ion-skeleton-text></ion-col>
+          <ion-col size="2"><ion-skeleton-text animated style="width: 10%"></ion-skeleton-text></ion-col>
+          <ion-col size="4"><ion-skeleton-text animated style="width: 20%"></ion-skeleton-text></ion-col>
+        </ion-row>
+      </p>
+      <p class="ion-text-wrap">
+        <ion-skeleton-text animated style="width: 88%"></ion-skeleton-text>
+      </p>
+    </ion-text>
+  </ion-label>
+</ion-item>
+<!-- Teléfono de contacto-->
+<ion-item color="blanco">
+  <ion-label>
+    <ion-text color="gris">
+      <h3><span><ion-icon slot="star" name="call" color="primary"></ion-icon></span><b><ion-skeleton-text animated style="width: 40%"></ion-skeleton-text></b></h3>
+    </ion-text>
+    <ion-text color="gris">
+      <p>
+        <ion-row>
+          <ion-col size="6">
+            <a><ion-skeleton-text animated style="width: 23%"></ion-skeleton-text></a>
+          </ion-col>
+        </ion-row>
+    </p>
+    </ion-text>
+  </ion-label>
+</ion-item>
+<!-- Dirección -->
+<ion-item color="blanco">
+  <ion-label>
+    <ion-text color="gris">
+      <h3><span><ion-icon slot="star" name="compass" color="primary"></ion-icon></span><b><ion-skeleton-text animated style="width: 40%"></ion-skeleton-text></b></h3>
+    </ion-text>
+    <ion-text color="gris" class="ion-text-wrap">
+      <p><ion-skeleton-text animated style="width: 70%"></ion-skeleton-text></p>
+      <p><span class="subtitulo"><ion-skeleton-text animated style="width: 40%"></ion-skeleton-text></span><ion-skeleton-text animated style="width: 100%"></ion-skeleton-text></p>
+    </ion-text>
+  </ion-label>
+</ion-item>
+<!-- Años de experiencia laboral -->
+<ion-item color="blanco">
+  <ion-label>
+    <ion-text color="gris">
+      <h3><span><ion-icon slot="star" name="briefcase" color="primary"></ion-icon></span><b><ion-skeleton-text animated style="width: 30%"></ion-skeleton-text></b></h3>
+    </ion-text>
+    <ion-text color="gris">
+      <p>
+        <ion-skeleton-text animated style="width: 20%"></ion-skeleton-text>
+      </p>
+    </ion-text>
+  </ion-label>
+</ion-item>
+<!-- Pais de origen -->
+<ion-item color="blanco">
+  <ion-label>
+    <ion-text color="gris">
+      <h3><span><ion-icon slot="star" name="flag" color="primary"></ion-icon></span><b><ion-skeleton-text animated style="width: 40%"></ion-skeleton-text></b></h3>
+    </ion-text>
+    <ion-text color="gris">
+      <p>
+        <ion-skeleton-text animated style="width: 75%"></ion-skeleton-text>
+      </p>
+    </ion-text>
+  </ion-label>
+</ion-item>
+<!-- Titulos acádemicos -->
+<ion-item color="blanco">
+  <ion-label>
+    <ion-text color="gris">
+      <h3><span><ion-icon slot="star" name="school" color="primary"></ion-icon></span><b><ion-skeleton-text animated style="width: 40%"></ion-skeleton-text></b></h3>
+    </ion-text>
+    <ion-text color="gris">
+      <p class="ion-text-wrap p"  >
+        <span class="ion-text-wrap"><ion-skeleton-text animated style="width: 55%"></ion-skeleton-text></span><br>
+        <span class="subtitulo"><ion-skeleton-text animated style="width: 10%"></ion-skeleton-text></span><span><ion-skeleton-text animated style="width: 40%"></ion-skeleton-text></span> <br>
+        <span class="subtitulo"><ion-skeleton-text animated style="width: 10%"></ion-skeleton-text></span><span><ion-skeleton-text animated style="width: 80%"></ion-skeleton-text></span>
+      </p>
+    </ion-text>
+  </ion-label>
+</ion-item>
+</ion-card-content>
+
+</ion-card>
+
+</ion-content>
+
+

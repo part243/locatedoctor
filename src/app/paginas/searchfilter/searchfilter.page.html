@@ -1,0 +1,257 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+<ion-buttons slot="start">
+  <ion-back-button defaultHref="dashboard"></ion-back-button>
+</ion-buttons>
+<ion-searchbar #searchbar
+        animated
+        inputmode="search"
+        type="search"
+        placeholder="Buscar médico"
+        autocomplete="on"
+        autocorrect="on"
+        debounce="500" 
+        (search) ="searchMedic($event)"
+        (keyup) ="buscarPorEspecialidad($event)"
+
+        ></ion-searchbar>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-radio-group name="busqueda" value={{buscarpor}} [(ngModel)]="buscarpor">
+      <ion-list-header>
+        <ion-label>Buscar por:</ion-label>
+      </ion-list-header>
+      <ion-row>
+        <ion-col size="6">
+          <ion-item (click)="busqueda('Especialidades')">
+            <ion-label>Especialidades</ion-label>
+            <ion-radio value="Especialidades" checked></ion-radio>
+          </ion-item>
+        </ion-col>
+        <ion-col size="6">
+          <ion-item (click)="busqueda('Nombres')">
+            <ion-label>Nombres</ion-label>
+            <ion-radio value="Nombres"></ion-radio>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-radio-group>
+  </ion-list>
+<!-- <ion-button (click)="searchMedic('')" expand="block" fill="clear" shape="round">
+  Buscar
+</ion-button> -->
+
+  <!-- SI BUSCA POR ESPECIALIDADES-->
+  <div *ngIf="buscarpor=='Especialidades' && resultEspecialidades.length > 0">
+    <ion-list>
+      <ion-item *ngFor="let item of resultEspecialidades, index as x" (click)="searchMedicfromEspecialidad(item.id)">
+        <ion-label>{{item.name}}</ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+
+
+
+
+
+<!-- LISTA DE MEDICOS ENCONTRADOS -->
+<div *ngIf="lstBusqueda.length > 0">
+  <ion-list>
+     <ion-item *ngFor="let item of lstBusqueda, index as x" (click)="VerEnMapa(item.cedula,x)">
+      <ion-thumbnail slot="end">
+        <img [src]="item.foto" />
+      </ion-thumbnail>
+      <ion-label>
+        <h2><b>{{item.sigla}}</b> {{item.nombre}}</h2>
+        <h3>
+          <b>{{item.especialidadp}}</b>,{{item.otrasespecialidades}}
+        </h3>
+        <h3>{{item.ubicacion.address}}</h3>
+        <h2>Distancia aproximada: <b>{{item.distancia}}</b></h2>
+        <h2 >  
+          <div *ngIf="item.star<=0"> <!-- Si es <=0 =CERO ESTRELLAS--> 
+            <ion-icon slot="start" name="star-outline" color="dark"></ion-icon> 
+            <ion-icon slot="start" name="star-outline" color="dark"></ion-icon> 
+            <ion-icon slot="start" name="star-outline" color="dark"></ion-icon> 
+            <ion-icon slot="start" name="star-outline" color="dark"></ion-icon> 
+            <ion-icon slot="start" name="star-outline" color="dark"></ion-icon> 
+
+            <ion-text color="primary" *ngFor="let comm of Comentario"  class="ion-text-right">
+              <span *ngIf="comm.cedula == item.cedula" class="ion-text-right">
+               {{comm.comentarios}}<ion-icon slot="end" name="chatbubbles" color="dark"></ion-icon>
+             </span>
+           </ion-text> 
+
+          </div>
+        
+        
+          <div *ngIf="item.star > 0 && (item.star <= 0.7 || item.star <= 0.5)"> <!-- Si es <0.7 && >0 =MEDIA ESTRELLA--> 
+            <ion-icon  slot="start" name="star-half-outline" color="amarillo"></ion-icon> 
+            <ion-icon slot="start" name="star-outline" color="dark"></ion-icon> 
+            <ion-icon slot="start" name="star-outline" color="dark"></ion-icon> 
+            <ion-icon slot="start" name="star-outline" color="dark"></ion-icon> 
+            <ion-icon slot="start" name="star-outline" color="dark"></ion-icon> 
+
+            <ion-text color="primary" *ngFor="let comm of Comentario"  class="ion-text-right">
+               <span *ngIf="comm.cedula == item.cedula" class="ion-text-right">
+                {{comm.comentarios}}<ion-icon slot="end" name="chatbubbles" color="dark"></ion-icon>
+              </span>
+            </ion-text> 
+            
+          </div>
+          <div *ngIf="item.star > 0.7 && item.star <= 1.2"> <!-- Si es >0.7 && <=1 = UNA ESTRELLA-->
+            <ion-icon  slot="start" name="star" color="amarillo"></ion-icon> 
+            <ion-icon slot="start" name="star-outline" color="dark"></ion-icon> 
+            <ion-icon slot="start" name="star-outline" color="dark"></ion-icon> 
+            <ion-icon slot="start" name="star-outline" color="dark"></ion-icon> 
+            <ion-icon slot="start" name="star-outline" color="dark"></ion-icon> 
+
+            <ion-text color="primary" *ngFor="let comm of Comentario"  class="ion-text-right">
+              <span *ngIf="comm.cedula == item.cedula" class="ion-text-right">
+               {{comm.comentarios}}<ion-icon slot="end" name="chatbubbles" color="dark"></ion-icon>
+             </span>
+           </ion-text> 
+          </div>
+          <div  *ngIf="item.star > 1.2 && item.star <= 1.7"> <!-- Si es >1.2 && <=1.5 = UNA ESTRELLA Y MEDIA-->
+            <ion-icon  slot="start" name="star" color="amarillo"></ion-icon> 
+            <ion-icon  slot="start" name="star-half-outline" color="amarillo"></ion-icon> 
+            <ion-icon slot="start" name="star-outline" color="dark"></ion-icon> 
+            <ion-icon slot="start" name="star-outline" color="dark"></ion-icon> 
+            <ion-icon slot="start" name="star-outline" color="dark"></ion-icon> 
+
+            <ion-text color="primary" *ngFor="let comm of Comentario"  class="ion-text-right">
+              <span *ngIf="comm.cedula == item.cedula" class="ion-text-right">
+               {{comm.comentarios}}<ion-icon slot="end" name="chatbubbles" color="dark"></ion-icon>
+             </span>
+           </ion-text> 
+          </div>
+          <div *ngIf="item.star > 1.7 && item.star <= 2.2"> <!-- Si es >1.7 && <=2 = DOS ESTRELLAS-->
+            <ion-icon  slot="start" name="star" color="amarillo"></ion-icon> 
+            <ion-icon  slot="start" name="star" color="amarillo"></ion-icon> 
+            <ion-icon slot="start" name="star-outline" color="dark"></ion-icon> 
+            <ion-icon slot="start" name="star-outline" color="dark"></ion-icon> 
+            <ion-icon slot="start" name="star-outline" color="dark"></ion-icon> 
+
+            <ion-text color="primary" *ngFor="let comm of Comentario"  class="ion-text-right">
+              <span *ngIf="comm.cedula == item.cedula" class="ion-text-right">
+               {{comm.comentarios}}<ion-icon slot="end" name="chatbubbles" color="dark"></ion-icon>
+             </span>
+           </ion-text> 
+          </div>
+          <div  *ngIf="item.star > 2.2 && item.star <= 2.7"> <!-- Si es >2.2 && <=2.5 = DOS ESTRELLAS Y MEDIA-->
+            <ion-icon  slot="start" name="star" color="amarillo"></ion-icon> 
+            <ion-icon  slot="start" name="star" color="amarillo"></ion-icon> 
+            <ion-icon  slot="start" name="star-half-outline" color="amarillo"></ion-icon> 
+            <ion-icon slot="start" name="star-outline" color="dark"></ion-icon> 
+            <ion-icon slot="start" name="star-outline" color="dark"></ion-icon> 
+
+            <ion-text color="primary" *ngFor="let comm of Comentario"  class="ion-text-right">
+              <span *ngIf="comm.cedula == item.cedula" class="ion-text-right">
+               {{comm.comentarios}}<ion-icon slot="end" name="chatbubbles" color="dark"></ion-icon>
+             </span>
+           </ion-text> 
+          </div>
+          <div  *ngIf="item.star > 2.7 && item.star <= 3.2"> <!-- Si es >2.7 && <=3 = TRES ESTRELLAS-->
+            <ion-icon  slot="start" name="star" color="amarillo"></ion-icon> 
+            <ion-icon  slot="start" name="star" color="amarillo"></ion-icon> 
+            <ion-icon  slot="start" name="star" color="amarillo"></ion-icon> 
+            <ion-icon slot="start" name="star-outline" color="dark"></ion-icon> 
+            <ion-icon slot="start" name="star-outline" color="dark"></ion-icon> 
+
+            <ion-text color="primary" *ngFor="let comm of Comentario"  class="ion-text-right">
+              <span *ngIf="comm.cedula == item.cedula" class="ion-text-right">
+               {{comm.comentarios}}<ion-icon slot="end" name="chatbubbles" color="dark"></ion-icon>
+             </span>
+           </ion-text> 
+          </div>
+          <div  *ngIf="item.star > 3.2 && item.star <= 3.7"> <!-- Si es >3.2 && <=3.5 = TRES ESTRELLAS Y MEDIA-->
+            <ion-icon  slot="start" name="star" color="amarillo"></ion-icon> 
+            <ion-icon  slot="start" name="star" color="amarillo"></ion-icon> 
+            <ion-icon  slot="start" name="star" color="amarillo"></ion-icon> 
+            <ion-icon  slot="start" name="star-half-outline" color="amarillo"></ion-icon>  
+            <ion-icon slot="start" name="star-outline" color="dark"></ion-icon> 
+
+            <ion-text color="primary" *ngFor="let comm of Comentario"  class="ion-text-right">
+              <span *ngIf="comm.cedula == item.cedula" class="ion-text-right">
+               {{comm.comentarios}}<ion-icon slot="end" name="chatbubbles" color="dark"></ion-icon>
+             </span>
+           </ion-text> 
+          </div>
+          <div  *ngIf="item.star > 3.7 && item.star <= 4.2"> <!-- Si es >3.7 && <=4 = CUATRO ESTRELLAS-->
+            <ion-icon  slot="start" name="star" color="amarillo"></ion-icon> 
+            <ion-icon  slot="start" name="star" color="amarillo"></ion-icon> 
+            <ion-icon  slot="start" name="star" color="amarillo"></ion-icon> 
+            <ion-icon  slot="start" name="star" color="amarillo"></ion-icon> 
+            <ion-icon slot="start" name="star-outline" color="dark"></ion-icon> 
+
+            <ion-text color="primary" *ngFor="let comm of Comentario"  class="ion-text-right">
+              <span *ngIf="comm.cedula == item.cedula" class="ion-text-right">
+               {{comm.comentarios}}<ion-icon slot="end" name="chatbubbles" color="dark"></ion-icon>
+             </span>
+           </ion-text> 
+          </div>
+          <div  *ngIf="item.star > 4.2 && item.star <= 4.7"> <!-- Si es >4.3 && <=4.5 = CUATRO ESTRELLAS Y MEDIA-->
+            <ion-icon  slot="start" name="star" color="amarillo"></ion-icon> 
+            <ion-icon  slot="start" name="star" color="amarillo"></ion-icon> 
+            <ion-icon  slot="start" name="star" color="amarillo"></ion-icon> 
+            <ion-icon  slot="start" name="star" color="amarillo"></ion-icon> 
+            <ion-icon  slot="start" name="star-half-outline" color="amarillo"></ion-icon>  
+            
+            <ion-text color="primary" *ngFor="let comm of Comentario"  class="ion-text-right">
+              <span *ngIf="comm.cedula == item.cedula" class="ion-text-right">
+               {{comm.comentarios}}<ion-icon slot="end" name="chatbubbles" color="dark"></ion-icon>
+             </span>
+           </ion-text> 
+            
+          </div>
+          <div  *ngIf="item.star >= 5"> <!-- Si es >=5 = CINCO ESTRELLAS-->
+            <ion-icon  slot="start" name="star" color="amarillo"></ion-icon> 
+            <ion-icon  slot="start" name="star" color="amarillo"></ion-icon> 
+            <ion-icon  slot="start" name="star" color="amarillo"></ion-icon> 
+            <ion-icon  slot="start" name="star" color="amarillo"></ion-icon> 
+            <ion-icon  slot="start" name="star" color="amarillo"></ion-icon> 
+
+            <ion-text color="primary" *ngFor="let comm of Comentario"  class="ion-text-right">
+              <span *ngIf="comm.cedula == item.cedula" class="ion-text-right">
+               {{comm.comentarios}}<ion-icon slot="end" name="chatbubbles" color="dark"></ion-icon>
+             </span>
+           </ion-text> 
+          </div>
+
+        </h2>
+        
+      </ion-label>
+    </ion-item> 
+  </ion-list>
+</div>
+
+
+<!-- LISTA DE MEDICOS ENCONTRADOS -->
+<div *ngIf="hayHistorial == true && resultEspecialidades.length <=0">
+  <ion-list>
+    <ion-text color="primary" class="ion-text-center">
+      <h1>Historial</h1>
+    </ion-text>
+     <ion-item *ngFor="let item of Historial, index as x" (click)="VerEnMapaHistorial(item.cedula,x)">
+      <ion-thumbnail slot="end">
+        <img [src]="item.foto" />
+      </ion-thumbnail>
+      <ion-label>
+        <h2><b>{{item.sigla}}</b> {{item.nombre}}</h2>
+        <h3>
+          <b>{{item.especialidadp}}</b>,{{item.otrasespecialidades}}
+        </h3>
+        <h3>{{item.ubicacion.address}}</h3>
+
+        
+      </ion-label>
+    </ion-item> 
+  </ion-list>
+</div>
+
+
+</ion-content>

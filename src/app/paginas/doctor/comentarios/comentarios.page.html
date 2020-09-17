@@ -1,0 +1,69 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="ion-no-border">
+    <ion-buttons slot="start">
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="icon-only" name="arrow-back" color="blanco"></ion-icon>
+      </ion-button>  
+    </ion-buttons>
+      <ion-text color="blanco" class="ion-text-center">
+        <h5 color="blanco">Comentarios de pacientes</h5>
+      </ion-text>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-button (click)="getAllsComment()" expand="block" fill="clear" shape="round">
+    Ver más comentarios
+  </ion-button>
+  <div *ngIf="UltimosComentarios">
+    <div class="talk-bubble tri-right left-in" *ngFor="let item of UltimosComentarios">
+      <div class="talktext">
+        <ion-item  lines="none" class="item_msg">
+          <ion-thumbnail slot="start"> <!-- imagen -->
+            <ion-skeleton-text animated style="width: 100%" *ngIf="!item.foto"></ion-skeleton-text>
+            <img *ngIf="item.foto" [src]="item.foto" alt="">
+          </ion-thumbnail>
+          <ion-label>
+            <h3> <!-- Nombre -->
+              {{item.data().nombre}}   
+            </h3>
+            <p> <!-- Feccha -->
+              {{item.data().timestamp.toDate() | date: 'dd/MMM/yyyy HH:mm'}}
+            </p>
+            <p class="ion-text-wrap"><!-- Comentario -->
+              {{item.data().texto}}
+            </p>
+          </ion-label>
+        </ion-item>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div *ngIf="UltimosComentarios == '' || UltimosComentarios.length == 0 ">  
+    <div *ngIf="UltimosComentarios">
+      <div class="talk-bubble tri-right left-in" *ngFor="let item of [1,1,1,1,1,1,1,1,1,1]">
+        <div class="talktext">
+          <ion-item  lines="none" class="item_msg">
+            <ion-thumbnail slot="start"> <!-- imagen -->
+              <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+            </ion-thumbnail>
+            <ion-label>
+              <h3> <!-- Nombre -->
+                <ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
+              </h3>
+              <p> <!-- Feccha -->
+                <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+              </p>
+              <p class="ion-text-wrap"><!-- Comentario -->
+                <ion-skeleton-text animated style="width: 90%"></ion-skeleton-text>
+              </p>
+            </ion-label>
+          </ion-item>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</ion-content>

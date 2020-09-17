@@ -1,0 +1,31 @@
+<ion-content class="auth-form" >
+  <div class="fullscreen-bg">
+    <video autoplay loop muted webkit-playsinline>
+      <source src="assets/video/arena.mp4" types='video/mp4; codecs="h.264"'>
+      
+    </video>
+  </div>
+  <div class="center animated zoomIn">
+    <h1>LocateDoctor App</h1>
+    <h2>Buaca médicos cercanos a tu ubicación.</h2>
+  </div>
+
+
+  <ion-grid class="botones ">
+    <ion-row>
+      <ion-col class="ion-align-self-center">
+        <ion-button class="animated zoomInUp" [routerLink]="['/registration']" expand="block" color="primary">Registrarse</ion-button>
+        <div class="animated slideInDown">
+          <span class="divider line one-line">or</span>
+          <span class="already">¿Ya tienes usuario?</span>
+        </div>
+        <ion-button class="animated fadeInUpBig" [routerLink]="['/login']" expand="block" color="danger">Inicia sesión</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>
+
+<ion-footer>
+  
+</ion-footer>

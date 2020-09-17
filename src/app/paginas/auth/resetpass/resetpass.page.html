@@ -1,0 +1,59 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title class="ion-text-center">Recuperar contraseña</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-img 
+[src]="logo" 
+class="center" 
+aling="center"
+style="margin-top: 10px; height: 100px;"
+></ion-img>
+
+<ion-content>
+<br>
+
+<ion-label color="secondary" class="ion-text-center"><h1>Igrese su nueva contraseña</h1></ion-label>
+  <ng-container *ngIf="actionCodeChecked" [ngSwitch]="mode"> 
+    <!-- Reset Password --> 
+      <ng-container *ngSwitchCase="'resetPassword'"> 
+
+        <ion-item>
+          <ion-label  position="floating" color="primary">Nueva contraseña <ion-text color="danger">*</ion-text></ion-label>
+        <ion-input 
+                  type="password" 
+                  minlength="6"
+                  [(ngModel)]="newPassword" 
+                  id="newPassword"
+                  name="newPassword"
+                  class="form-control">
+        </ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label  position="floating" color="primary">Repetir contraseña <ion-text color="danger">*</ion-text></ion-label>
+      <ion-input 
+                type="password" 
+                minlength="6"
+                [(ngModel)]="confirmPassword" 
+                id="confirmPassword"
+                name="confirmPassword"
+                class="form-control">
+      </ion-input>
+    </ion-item>
+
+    <br>
+    <ion-button (click)="handleResetPassword()" expand="full" shape="round" color="primary">
+      Confirmar
+    </ion-button>
+      </ng-container> 
+      <!-- Recover Email --> 
+      <!-- <ng-container *ngSwitchCase="'recoverEmail'"> 
+      </ng-container>  -->
+      
+      <!-- Verify Email --> 
+      <!-- <ng-container *ngSwitchCase="'verifyEmail'"> 
+      </ng-container>  -->
+  </ng-container>
+
+</ion-content>
