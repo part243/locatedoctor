@@ -120,14 +120,18 @@
       "cordova-sqlite-storage": {},
       "cordova-plugin-facebook4": {
         "APP_ID": "253121452488200",
-        "APP_NAME": "locatedoctor"
+        "APP_NAME": "locatedoctor",
+        "FACEBOOK_HYBRID_APP_EVENTS": "false",
+        "FACEBOOK_ANDROID_SDK_VERSION": "5.13.0"
       },
       "cordova-plugin-googleplus": {
         "REVERSED_CLIENT_ID": "com.googleusercontent.apps.842379700160-ac7kn11dhludlq22mfffuscrq8sp9dj1",
         "WEB_APPLICATION_CLIENT_ID": "842379700160-mnun63047u7ktvcg90dloa5vct2ja6f2.apps.googleusercontent.com",
         "PLAY_SERVICES_VERSION": "15.0.1"
       },
-      "cordova-plugin-camera": {},
+      "cordova-plugin-camera": {
+        "ANDROID_SUPPORT_V4_VERSION": "27.+"
+      },
       "cordova-plugin-crop": {},
       "cordova-plugin-file-transfer": {},
       "cordova-plugin-file": {},
